@@ -1,4 +1,4 @@
-use chrono::{DateTime, Duration, Utc};
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -110,7 +110,7 @@ mod tests {
         let payment_request = PaymentRequest {
             castka: 40.0,
             mena: String::from("CZK"),
-            datum: Utc::now() + Duration::days(2),
+            datum: Utc::now() + chrono::Duration::days(2),
             typ_platby: String::from("CARD"),
             seznam_polozek: vec![String::from("máslo")],
         };
@@ -122,7 +122,7 @@ mod tests {
         let payment_request = PaymentRequest {
             castka: 40.0,
             mena: String::from("CZK"),
-            datum: Utc::now() - Duration::hours(2),
+            datum: Utc::now() - chrono::Duration::hours(2),
             typ_platby: String::from("CARD"),
             seznam_polozek: vec![String::from("máslo")],
         };
