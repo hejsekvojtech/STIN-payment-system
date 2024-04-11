@@ -1,0 +1,1 @@
+[![codecov](https://codecov.io/gh/hejsekvojtech/STIN-payment-system/graph/badge.svg?token=GL3OPT3OL0)](https://codecov.io/gh/hejsekvojtech/STIN-payment-system)
