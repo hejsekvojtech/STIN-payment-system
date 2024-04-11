@@ -1,4 +1,4 @@
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, Duration, Utc};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -62,5 +62,82 @@ impl PaymentRequest {
             r#"<PaymentRequest><castka>{}</castka><mena>{}</mena><datum>{}</datum><typ_platby>{}</typ_platby></PaymentRequest>"#,
             self.castka, self.mena, self.datum, self.typ_platby
         )
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_payment_request_positive_amount() {
+        let payment_request = PaymentRequest {
+            castka: 100.0,
+            mena: String::from("CZK"),
+            datum: Utc::now(),
+            typ_platby: String::from("CARD"),
+            seznam_polozek: vec![String::from("máslo")],
+        };
+        assert!(payment_request.validate().is_ok());
+    }
+
+    #[test]
+    fn test_payment_request_negative_amount() {
+        let payment_request = PaymentRequest {
+            castka: -40.0,
+            mena: String::from("CZK"),
+            datum: Utc::now(),
+            typ_platby: String::from("CARD"),
+            seznam_polozek: vec![String::from("máslo")],
+        };
+        assert!(!payment_request.validate().is_ok());
+    }
+
+    #[test]
+    fn test_payment_request_empty_list() {
+        let payment_request = PaymentRequest {
+            castka: 40.0,
+            mena: String::from("CZK"),
+            datum: Utc::now(),
+            typ_platby: String::from("CARD"),
+            seznam_polozek: vec![],
+        };
+        assert!(!payment_request.validate().is_ok());
+    }
+
+    #[test]
+    fn test_payment_request_future_date() {
+        let payment_request = PaymentRequest {
+            castka: 40.0,
+            mena: String::from("CZK"),
+            datum: Utc::now() + Duration::days(2),
+            typ_platby: String::from("CARD"),
+            seznam_polozek: vec![String::from("máslo")],
+        };
+        assert!(!payment_request.validate().is_ok());
+    }
+
+    #[test]
+    fn test_payment_request_past_date() {
+        let payment_request = PaymentRequest {
+            castka: 40.0,
+            mena: String::from("CZK"),
+            datum: Utc::now() - Duration::hours(2),
+            typ_platby: String::from("CARD"),
+            seznam_polozek: vec![String::from("máslo")],
+        };
+        assert!(payment_request.validate().is_ok());
+    }
+
+    #[test]
+    fn test_payment_request_unsupported_payment() {
+        let payment_request = PaymentRequest {
+            castka: 40.0,
+            mena: String::from("CZK"),
+            datum: Utc::now(),
+            typ_platby: String::from("NFT"),
+            seznam_polozek: vec![String::from("máslo")],
+        };
+        assert!(!payment_request.process().is_ok());
     }
 }
