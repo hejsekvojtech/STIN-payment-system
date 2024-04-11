@@ -30,10 +30,14 @@ impl ProcessPayment for PaymentRequest {
             return Err(String::from("Amount must be positive"));
         }
 
-         if self.seznam_polozek.len() == 0 {
+        if self.seznam_polozek.is_empty() {
             return Err(String::from("Item list cannot be empty"));
-         }
-       
+        }
+
+        if self.datum > Utc::now() {
+            return Err(String::from("Payment date cannot be in the future"));
+        }
+
         Ok(())
     }
 }
