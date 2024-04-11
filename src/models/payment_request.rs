@@ -90,7 +90,7 @@ mod tests {
             typ_platby: String::from("CARD"),
             seznam_polozek: vec![String::from("máslo")],
         };
-        assert!(!payment_request.validate().is_ok());
+        assert!(payment_request.validate().is_err());
     }
 
     #[test]
@@ -102,7 +102,7 @@ mod tests {
             typ_platby: String::from("CARD"),
             seznam_polozek: vec![],
         };
-        assert!(!payment_request.validate().is_ok());
+        assert!(payment_request.validate().is_err());
     }
 
     #[test]
@@ -114,7 +114,7 @@ mod tests {
             typ_platby: String::from("CARD"),
             seznam_polozek: vec![String::from("máslo")],
         };
-        assert!(!payment_request.validate().is_ok());
+        assert!(payment_request.validate().is_err());
     }
 
     #[test]
@@ -138,6 +138,23 @@ mod tests {
             typ_platby: String::from("NFT"),
             seznam_polozek: vec![String::from("máslo")],
         };
-        assert!(!payment_request.process().is_ok());
+        assert!(payment_request.process().is_err());
+    }
+
+    #[test]
+    fn test_payment_request_to_xml() {
+        let payment_request = PaymentRequest {
+            castka: 100.0,
+            mena: String::from("CZK"),
+            datum: Utc::now(),
+            typ_platby: String::from("CASH"),
+            seznam_polozek: vec![String::from("máslo")],
+        };
+        let xml = payment_request.to_xml();
+        assert!(xml.contains("<PaymentRequest>"));
+        assert!(xml.contains("</PaymentRequest>"));
+        assert!(xml.contains("<castka>100</castka>"));
+        assert!(xml.contains("<mena>CZK</mena>"));
+        assert!(xml.contains("<typ_platby>CASH</typ_platby>"));
     }
 }
