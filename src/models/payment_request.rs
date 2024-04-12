@@ -156,5 +156,7 @@ mod tests {
         assert!(xml.contains("<castka>100</castka>"));
         assert!(xml.contains("<mena>CZK</mena>"));
         assert!(xml.contains("<typ_platby>CASH</typ_platby>"));
+        assert!(!xml.contains("<seznam_polozek>"));
+        assert!(!xml.contains("</seznam_polozek>"));
     }
 }
