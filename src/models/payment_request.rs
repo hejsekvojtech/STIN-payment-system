@@ -1,5 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
+use crate::utils::error_to_string;
+use crate::utils::PaymentErrorEnum::{ErrEmptyList, ErrFutureDate, ErrUnsupportedType, ErrNonPositiveAmount};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PaymentRequest {
@@ -21,21 +23,21 @@ impl ProcessPayment for PaymentRequest {
         match self.typ_platby.as_str() {
             "CARD" => self.card(),
             "CASH" => self.cash(),
-            _ => Err(String::from("Unsupported payment type")),
+            _ => Err(error_to_string(ErrUnsupportedType)),
         }
     }
 
     fn validate(&self) -> Result<(), String> {
         if self.castka <= 0.0 {
-            return Err(String::from("Amount must be positive"));
+            return Err(error_to_string(ErrNonPositiveAmount));
         }
 
         if self.seznam_polozek.is_empty() {
-            return Err(String::from("Item list cannot be empty"));
+            return Err(error_to_string(ErrEmptyList));
         }
 
         if self.datum > Utc::now() {
-            return Err(String::from("Payment date cannot be in the future"));
+            return Err(error_to_string(ErrFutureDate));
         }
 
         Ok(())

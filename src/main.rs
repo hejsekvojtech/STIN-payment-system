@@ -3,6 +3,7 @@ use actix_web::{web, App, HttpServer};
 mod controllers;
 mod models;
 mod services;
+mod utils;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {

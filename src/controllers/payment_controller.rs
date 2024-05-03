@@ -8,7 +8,7 @@ pub async fn process_payment(payment: web::Json<PaymentRequest>) -> impl Respond
     match payment_request.validate() {
         Ok(()) => {
             match payment_service::process_payment(payment_request).await {
-                Ok(_) => HttpResponse::Ok().body("Payment processed successfully"),
+                Ok(_) => HttpResponse::Ok().json(1),
                 Err(err) => HttpResponse::BadRequest().body(err),
             }
         }
