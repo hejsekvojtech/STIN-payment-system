@@ -5,7 +5,7 @@ use chrono::Utc;
 use stin_payment_program::controllers::payment_controller;
 use stin_payment_program::models::payment_request::PaymentRequest;
 use stin_payment_program::utils::error_to_string;
-use stin_payment_program::utils::PaymentErrorEnum::{ErrFutureDate, ErrUnsupportedType};
+use stin_payment_program::enums::PaymentErrorEnum::{ErrFutureDate, ErrUnsupportedType};
 
 #[actix_rt::test]
 async fn test_process_payment_success() {

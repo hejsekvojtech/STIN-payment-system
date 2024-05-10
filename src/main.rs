@@ -4,6 +4,8 @@ mod controllers;
 mod models;
 mod services;
 mod utils;
+mod handlers;
+mod enums;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
